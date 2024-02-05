@@ -1,5 +1,0 @@
-
-
-const allCategoriesData=()=>{
-      const geData= 
-} 
