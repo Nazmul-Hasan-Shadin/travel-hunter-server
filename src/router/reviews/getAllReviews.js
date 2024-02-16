@@ -1,8 +1,8 @@
-const express = require('express')
-const reviews = require('../../api/reviews/reviews')
- 
-const router= express.Router()
+const express = require("express");
+const reviews = require("../../api/reviews/reviews");
 
-  router.get('/reviews',reviews)
+const router = express.Router();
 
-module.exports= router
+router.get("/reviews", reviews);
+
+module.exports = router;

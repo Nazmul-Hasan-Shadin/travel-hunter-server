@@ -1,37 +1,33 @@
-const express= require('express')
-const app= express()
-const applymiddleWare = require('./middleware/applayMiddleware')
-const connectToDatabase = require('./db/connectDb')
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const applymiddleWare = require("./middleware/applayMiddleware");
+const connectToDatabase = require("./db/connectDb");
 
- 
+applymiddleWare(app);
 
+const categoriesData = require("./router/fetchAllcategoriesData/allCategoriesData");
+const reviews = require("./router/reviews/getAllReviews");
+const authentication = require("./router/authenticationRoute/authenticatonRouter");
+app.use(categoriesData);
+app.use(reviews);
+app.use(authentication);
 
-applymiddleWare(app)
+app.get("/health", (req, res) => {
+  res.send("database is running");
+});
 
-const categoriesData= require('./router/fetchAllcategoriesData/allCategoriesData')
-const reviews= require('./router/reviews/getAllReviews')
+app.all("*", (req, res, next) => {
+  const error = new Error(`the requested url is invaild [${req.url}] `);
+  next(error);
+});
 
-app.use(categoriesData)
-app.use(reviews)
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({ message: err.message });
+});
 
+app.listen(3001, () => {
+  console.log("server is running");
+});
 
-app.get('/health',(req,res)=>{
-    res.send('database is running')
-})
-
-app.all('*',(req,res,next)=>{
-     const error= new Error(`the requested url is invaild [${req.url}] `)
-     next(error)
-})
-
- app.use((err,req,res,next)=>{
-   
-     res.status(err.status || 500).json({message:err.message})
- })
-
-
-app.listen(3001,()=>{
-    console.log('server is running');
-})
-
-connectToDatabase()
+connectToDatabase();
